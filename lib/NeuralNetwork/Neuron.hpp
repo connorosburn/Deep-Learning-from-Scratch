@@ -1,6 +1,9 @@
 #ifndef NEURON_HPP
 #define NEURON_HPP
 
+#include <vector>
+#include "Weight.hpp"
+
 class Neuron {
     public:
         Neuron(std::vector<const double&> backOutputs, std::vector<const double&> backErrors);
