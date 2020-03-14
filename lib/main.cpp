@@ -46,19 +46,21 @@ struct BinaryData {
 };
 
 int main() {
-    std::vector<double> inputVector(8);
+    std::vector<double> input(8);
+    const std::vector<std::reference_wrapper<double>> inputRefs(input.begin(), input.end());
     std::vector<double> totalError(8);
-    FullyConnectedLayer hiddenLayer(inputVector, totalError, 8, Activation::relu);
+    const std::vector<std::reference_wrapper<double>> errorRefs(totalError.begin(), totalError.end());
+    FullyConnectedLayer hiddenLayer(inputRefs, errorRefs, 8, Activation::relu);
     FullyConnectedLayer outputLayer(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 1, Activation::relu);
-    const std::vector<double>& networkOutput = outputLayer.getOutputs();
-    std::vector<double>& networkError = outputLayer.getErrors();
+    auto networkOutput = outputLayer.getOutputs();
+    auto networkError = outputLayer.getErrors();
 
     while(true) {
         std::cout<<"\n";
 
         // generates binary data and forward propogates it
         BinaryData binaryData;
-        inputVector = binaryData.binaryDigits;
+        input = binaryData.binaryDigits;
         hiddenLayer.forwardPropogate();
         outputLayer.forwardPropogate();
         
@@ -66,6 +68,6 @@ int main() {
         for(const double& digit : binaryData.binaryDigits) {
             std::cout<<digit;
         }
-        std::cout<<"\n"<<binaryData.binarySum<<"\n"<<networkOutput.front()<<"\n";
+        std::cout<<"\n"<<binaryData.baseTenSum<<"\n"<<networkOutput.front()<<"\n";
     }
 }

@@ -1,6 +1,6 @@
 #include "FullyConnectedLayer.hpp"
 
-FullyConnectedLayer::FullyConnectedLayer(std::vector<const double&> backOutputs, std::vector<double&> backErrors, int size, const Activation& activationPair):
+FullyConnectedLayer::FullyConnectedLayer(const std::vector<std::reference_wrapper<double>> backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size, const Activation::Activation& activationPair):
 activation(activationPair) {
     if(backOutputs.size() != backErrors.size()) {
         throw std::exception("Layer must receive the same number of output references as it receives error references");
@@ -9,7 +9,7 @@ activation(activationPair) {
     }
 }
 
-void FullyConnectedLayer::initializeNeurons(std::vector<const double&> outputs, std::vector<double&> errors, int size) {
+void FullyConnectedLayer::initializeNeurons(const std::vector<std::reference_wrapper<double>> outputs, std::vector<std::reference_wrapper<double>> errors, int size) {
     for(int i = 0; i < size; i++) {
         neurons.emplace_back(outputs[i], errors[i]);
     }
@@ -26,7 +26,7 @@ void FullyConnectedLayer::backPropogate(const double& learningRate) {
     }
 }
 
-std::vector<const double&> FullyConnectedLayer::getOutputs() {
+const std::vector<std::reference_wrapper<double>> FullyConnectedLayer::getOutputs() {
     std::vector<const double&> outputs;
     for(const Neuron& neuron : neurons) {
         outputs.emplace_back(neuron.getOutput());
@@ -34,7 +34,7 @@ std::vector<const double&> FullyConnectedLayer::getOutputs() {
     return outputs;
 }
 
-std::vector<double&> FullyConnectedLayer::getErrors() {
+std::vector<std::reference_wrapper<double>> FullyConnectedLayer::getErrors() {
     std::vector<double&> errors;
     for(const Neuron& neuron : neurons) {
         errors.emplace_back(neuron.getError());

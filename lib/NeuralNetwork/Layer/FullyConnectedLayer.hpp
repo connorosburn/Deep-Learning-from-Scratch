@@ -1,17 +1,18 @@
 #include "Layer.hpp"
 #include "../Neuron.hpp"
+#include "../Activation.hpp"
 
 class FullyConnectedLayer : public Layer {
     public:
-        FullyConnectedLayer(std::vector<const double&> backOutputs, std::vector<double&> backErrors, int size, const Activation& activationPair);
+        FullyConnectedLayer(const std::vector<std::reference_wrapper<double>> backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size, const Activation::Activation& activationPair);
         void forwardPropogate();
         void backPropogate(const double& learningRate);
-        std::vector<const double&> getOutputs();
-        std::vector<double&> getErrors();
+        const std::vector<std::reference_wrapper<double>> getOutputs();
+        std::vector<std::reference_wrapper<double>> getErrors();
 
     private:
-        const Activation& activation;
+        const Activation::Activation& activation;
         std::vector<Neuron> neurons;
-        void initializeNeurons(std::vector<const double&> outputs, std::vector<double&> errors, int size);
+        void initializeNeurons(const std::vector<std::reference_wrapper<double>> outputs, std::vector<std::reference_wrapper<double>> errors, int size);
 
 };
