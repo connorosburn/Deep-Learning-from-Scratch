@@ -22,6 +22,20 @@ double Neuron::productSum() {
     return sum;
 }
 
-void forwardPropogate(std::function<double(double)> activation) {
+void Neuron::forwardPropogate(std::function<double(double)> activation) {
     output = activation(productSum());
+}
+
+void Neuron::backPropogate(std::function<double(double)> activationDerivative, const double& learningRate) {
+    double delta = activationDerivative(output) * error;
+    error = 0;
+    adjustWeights(delta, learningRate);
+}
+
+void Neuron::adjustWeights(double delta, const double& learningRate) {
+    for(Weight& weight : weights) {
+        weight.backError += (weight.value * delta);
+        weight.value -= (weight.backOutput * delta * learningRate);
+    }
+    bias -= delta * learningRate;
 }
