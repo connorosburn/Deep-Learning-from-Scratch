@@ -1,4 +1,5 @@
 #include "Layer.hpp"
+#include "Neuron.hpp"
 
 class FullyConnectedLayer : public Layer {
     public:
@@ -8,5 +9,7 @@ class FullyConnectedLayer : public Layer {
 
     private:
         const Activation& activation;
+        std::vector<Neuron> neurons;
+        void initializeNeurons(std::vector<const double&> outputs, std::vector<const double&> errors);
 
 };
