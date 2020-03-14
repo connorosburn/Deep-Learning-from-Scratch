@@ -14,3 +14,10 @@ void FullyConnectedLayer::initializeNeurons(std::vector<const double&> outputs, 
         neurons.emplace_back(outputs[i], errors[i]);
     }
 }
+
+void FullyConnectedLayer::forwardPropogate() {
+    for(Neuron& neuron : neurons) {
+        neuron.forwardPropogate(activation.activation);
+    }
+}
+void backPropogate(const double& learningRate);
