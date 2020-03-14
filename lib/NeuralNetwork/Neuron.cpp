@@ -39,3 +39,11 @@ void Neuron::adjustWeights(double delta, const double& learningRate) {
     }
     bias -= delta * learningRate;
 }
+
+const double& Neuron::getOutput() {
+    return output;
+}
+
+double& Neuron::getError() {
+    return error;
+}

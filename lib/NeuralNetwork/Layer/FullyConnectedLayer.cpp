@@ -20,4 +20,8 @@ void FullyConnectedLayer::forwardPropogate() {
         neuron.forwardPropogate(activation.activation);
     }
 }
-void backPropogate(const double& learningRate);
+void FullyConnectedLayer::backPropogate(const double& learningRate) {
+    for(Neuron& neuron : neurons) {
+        neuron.backPropogate(activation.derivative, learningRate);
+    }
+}
