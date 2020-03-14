@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <random>
+#include "NeuralNetwork/Layer/FullyConnectedLayer.hpp"
 
 std::vector<double> randomBinary(int length) {
     //totes copied/pasted (and modified), throwaway code anyway
@@ -45,5 +46,26 @@ struct BinaryData {
 };
 
 int main() {
+    std::vector<double> inputVector(8);
+    std::vector<double> totalError(8);
+    FullyConnectedLayer hiddenLayer(inputVector, totalError, 8, Activation::relu);
+    FullyConnectedLayer outputLayer(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 1, Activation::relu);
+    const std::vector<double>& networkOutput = outputLayer.getOutputs();
+    std::vector<double>& networkError = outputLayer.getErrors();
 
+    while(true) {
+        std::cout<<"\n";
+
+        // generates binary data and forward propogates it
+        BinaryData binaryData;
+        inputVector = binaryData.binaryDigits;
+        hiddenLayer.forwardPropogate();
+        outputLayer.forwardPropogate();
+        
+        // reports prediction
+        for(const double& digit : binaryData.binaryDigits) {
+            std::cout<<digit;
+        }
+        std::cout<<"\n"<<binaryData.binarySum<<"\n"<<networkOutput.front()<<"\n";
+    }
 }
