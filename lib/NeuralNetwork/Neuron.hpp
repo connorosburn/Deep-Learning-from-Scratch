@@ -19,6 +19,7 @@ class Neuron {
         double bias;
         double output;
         double error;
+        void initializeWeights(std::vector<const double&> outputs, std::vector<const double&> errors);
 
 };
 
