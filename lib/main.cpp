@@ -48,37 +48,57 @@ struct BinaryData {
     double baseTenSum;
 };
 
+void binaryCrossEntropyDerivative(const std::vector<double>& prediction, const std::vector<double>& expectation, std::vector<std::reference_wrapper<double>> errorRef) {
+    for(int i = 0; i < prediction.size(); i++) {
+        if(expectation[i] == 1) {
+            errorRef[i] = double(1) / prediction[i];
+        } else {
+            errorRef[i] = double(1) / (double(1) - prediction[i]);
+        }
+    }
+}
+
 int main() {
-    const double LEARNING_RATE = 0.001;
+    const double LEARNING_RATE = 0.000001;
 
     std::vector<double> input(8, 0);
     std::vector<double> totalError(8, 0);
-    FullyConnectedLayer hiddenLayer({input.begin(), input.end()}, {totalError.begin(), totalError.end()}, 16, Activation::relu);
-    FullyConnectedLayer hiddenLayer2(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 8, Activation::relu);
-    FullyConnectedLayer outputLayer(hiddenLayer2.getOutputs(), hiddenLayer2.getErrors(), 1, Activation::relu);
-    double& networkOutput = outputLayer.getOutputs().front().get();
-    double& networkError = outputLayer.getErrors().front().get();
+    FullyConnectedLayer hiddenLayer({input.begin(), input.end()}, {totalError.begin(), totalError.end()}, 8, Activation::relu);
+    FullyConnectedLayer outputLayer(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 5, Activation::sigmoid);
+    auto& networkOutput = outputLayer.getOutputs();
+    auto& networkError = outputLayer.getErrors();
 
     while(true) {
-        std::cout<<"\n";
-
         // generates binary data and forward propogates it
         BinaryData binaryData;
         input = binaryData.binaryDigits;
         hiddenLayer.forwardPropogate();
-        hiddenLayer2.forwardPropogate();
         outputLayer.forwardPropogate();
         
         // reports prediction
+        std::vector<double> prediction = interpretNetworkOutput(networkOutput);
+        std::cout<<"\n";
+        std::cout<<"Input: ";
         for(const double& digit : binaryData.binaryDigits) {
             std::cout<<digit;
         }
-        std::cout<<"\n"<<binaryData.baseTenSum<<"\n"<<networkOutput<<"\n";
+        std::cout<<"\nExpectation: ";
+        for(const double& digit : binaryData.binarySum) {
+            std::cout<<digit;
+        }
+        std::cout<<"\nPrediction: ";
+        for(const double& digit : prediction) {
+            std::cout<<digit;
+        }
+        std::cout<<"\nRaw Outputs:"
+        for(int i = 0; i < networkOutput.size(); i++) {
+            std::cout<<"\n"<<networkOutput[i]<<"("<<prediction[i]<<")";
+        }
+        std::cout<<"\n"
 
         // trains model
-        networkError = networkOutput - binaryData.baseTenSum;
+        binaryCrossEntropyDerivative(networkOutput, binaryData.binarySum, networkError);
         outputLayer.backPropogate(LEARNING_RATE);
-        hiddenLayer2.backPropogate(LEARNING_RATE);
         hiddenLayer.backPropogate(LEARNING_RATE);
     }
 }
