@@ -3,6 +3,9 @@
 #include <cmath>
 #include <random>
 #include "NeuralNetwork/Layer/FullyConnectedLayer.hpp"
+#include <functional>
+#include <vector>
+#include <typeinfo>
 
 std::vector<double> randomBinary(int length) {
     //totes copied/pasted (and modified), throwaway code anyway
@@ -46,28 +49,26 @@ struct BinaryData {
 };
 
 int main() {
-    std::vector<double> input(8);
-    const std::vector<std::reference_wrapper<double>> inputRefs(input.begin(), input.end());
-    std::vector<double> totalError(8);
-    const std::vector<std::reference_wrapper<double>> errorRefs(totalError.begin(), totalError.end());
-    FullyConnectedLayer hiddenLayer(inputRefs, errorRefs, 8, Activation::relu);
-    FullyConnectedLayer outputLayer(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 1, Activation::relu);
-    auto networkOutput = outputLayer.getOutputs();
-    auto networkError = outputLayer.getErrors();
+    std::vector<double> input(8, 0);
+    std::vector<double> totalError(8, 0);
+    FullyConnectedLayer hiddenLayer({input.begin(), input.end()}, {totalError.begin(), totalError.end()}, 8, Activation::relu);
+    // FullyConnectedLayer outputLayer(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 1, Activation::relu);
+    // auto networkOutput = outputLayer.getOutputs();
+    // auto networkError = outputLayer.getErrors();
 
-    while(true) {
-        std::cout<<"\n";
+    // while(true) {
+    //     std::cout<<"\n";
 
-        // generates binary data and forward propogates it
-        BinaryData binaryData;
-        input = binaryData.binaryDigits;
-        hiddenLayer.forwardPropogate();
-        outputLayer.forwardPropogate();
+    //     // generates binary data and forward propogates it
+    //     BinaryData binaryData;
+    //     input = binaryData.binaryDigits;
+    //     hiddenLayer.forwardPropogate();
+    //     outputLayer.forwardPropogate();
         
-        // reports prediction
-        for(const double& digit : binaryData.binaryDigits) {
-            std::cout<<digit;
-        }
-        std::cout<<"\n"<<binaryData.baseTenSum<<"\n"<<networkOutput.front()<<"\n";
-    }
+    //     // reports prediction
+    //     for(const double& digit : binaryData.binaryDigits) {
+    //         std::cout<<digit;
+    //     }
+    //     std::cout<<"\n"<<binaryData.baseTenSum<<"\n"<<networkOutput.front()<<"\n";
+    // }
 }

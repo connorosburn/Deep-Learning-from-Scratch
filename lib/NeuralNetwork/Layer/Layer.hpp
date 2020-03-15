@@ -3,8 +3,9 @@
 
 class Layer {
     public:
-        virtual void forwardPropogate();
-        virtual void backPropogate(const double& learningRate);
+        Layer() {};
+        virtual void forwardPropogate() = 0;
+        virtual void backPropogate(const double& learningRate) = 0;
 };
 
 #endif

@@ -1,16 +1,21 @@
 #include "Neuron.hpp"
 
-Neuron::Neuron(const std::vector<std::reference_wrapper<double>> backOutputs, std::vector<std::reference_wrapper<double>> backErrors): bias(0), error(0) {
+
+struct NeuronError : std::exception {
+  const char* what() const noexcept {return "Neuron must receive the same number of output references as it receives error references\n";}
+};
+
+Neuron::Neuron(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors): bias(0), error(0) {
     if(backOutputs.size() != backErrors.size()) {
-        throw std::exception("Neuron must receive the same number of output references as it receives error references");
+        throw NeuronError();
     } else {
         initializeWeights(backOutputs, backErrors);
     }
 }
 
-void Neuron::initializeWeights(const std::vector<std::reference_wrapper<double>> outputs, std::vector<std::reference_wrapper<double>> errors) {
-    for(int i = 0; i < backOutputs.size(); i++) {
-        weights.emplace_back(outputs[i], errors[i]);
+void Neuron::initializeWeights(std::vector<std::reference_wrapper<double>>  outputs, std::vector<std::reference_wrapper<double>> errors) {
+    for(int i = 0; i < outputs.size(); i++) {
+        weights.emplace_back(outputs[i].get(), errors[i].get());
     }
 }
 
@@ -40,7 +45,7 @@ void Neuron::adjustWeights(double delta, const double& learningRate) {
     bias -= delta * learningRate;
 }
 
-const double& Neuron::getOutput() {
+double& Neuron::getOutput() {
     return output;
 }
 
