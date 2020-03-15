@@ -49,26 +49,36 @@ struct BinaryData {
 };
 
 int main() {
+    const double LEARNING_RATE = 0.001;
+
     std::vector<double> input(8, 0);
     std::vector<double> totalError(8, 0);
-    FullyConnectedLayer hiddenLayer({input.begin(), input.end()}, {totalError.begin(), totalError.end()}, 8, Activation::relu);
-    // FullyConnectedLayer outputLayer(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 1, Activation::relu);
-    // auto networkOutput = outputLayer.getOutputs();
-    // auto networkError = outputLayer.getErrors();
+    FullyConnectedLayer hiddenLayer({input.begin(), input.end()}, {totalError.begin(), totalError.end()}, 16, Activation::relu);
+    FullyConnectedLayer hiddenLayer2(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 8, Activation::relu);
+    FullyConnectedLayer outputLayer(hiddenLayer2.getOutputs(), hiddenLayer2.getErrors(), 1, Activation::relu);
+    double& networkOutput = outputLayer.getOutputs().front().get();
+    double& networkError = outputLayer.getErrors().front().get();
 
-    // while(true) {
-    //     std::cout<<"\n";
+    while(true) {
+        std::cout<<"\n";
 
-    //     // generates binary data and forward propogates it
-    //     BinaryData binaryData;
-    //     input = binaryData.binaryDigits;
-    //     hiddenLayer.forwardPropogate();
-    //     outputLayer.forwardPropogate();
+        // generates binary data and forward propogates it
+        BinaryData binaryData;
+        input = binaryData.binaryDigits;
+        hiddenLayer.forwardPropogate();
+        hiddenLayer2.forwardPropogate();
+        outputLayer.forwardPropogate();
         
-    //     // reports prediction
-    //     for(const double& digit : binaryData.binaryDigits) {
-    //         std::cout<<digit;
-    //     }
-    //     std::cout<<"\n"<<binaryData.baseTenSum<<"\n"<<networkOutput.front()<<"\n";
-    // }
+        // reports prediction
+        for(const double& digit : binaryData.binaryDigits) {
+            std::cout<<digit;
+        }
+        std::cout<<"\n"<<binaryData.baseTenSum<<"\n"<<networkOutput<<"\n";
+
+        // trains model
+        networkError = networkOutput - binaryData.baseTenSum;
+        outputLayer.backPropogate(LEARNING_RATE);
+        hiddenLayer2.backPropogate(LEARNING_RATE);
+        hiddenLayer.backPropogate(LEARNING_RATE);
+    }
 }
