@@ -1,4 +1,5 @@
 #include "Neuron.hpp"
+#include <iostream>
 
 
 struct NeuronError : std::exception {

@@ -47,6 +47,15 @@ namespace Activation {
 
         //sigmoid
         [](double x) -> double {
+            const int OVERFLOW_MAX = 9;
+            const int UNDERFLOW_MIN = -9;
+
+            if(x > OVERFLOW_MAX) {
+                x = OVERFLOW_MAX;
+            } else if(x < UNDERFLOW_MIN) {
+                x = UNDERFLOW_MIN;
+            }
+
             return double(1) / (double(1) + std::exp(double(-1) * x));
         },
         
