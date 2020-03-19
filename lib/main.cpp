@@ -8,16 +8,6 @@
 #include "MNISTFashion/MNISTLoader.hpp"
 #include "network_parameters.hpp"
 
-void binaryCrossEntropyDerivative(const std::vector<double>& prediction, const std::vector<double>& expectation, std::vector<std::reference_wrapper<double>> errorRef) {
-    for(int i = 0; i < prediction.size(); i++) {
-        if(expectation[i] > 0) {
-            errorRef[i].get() = double(-1) * (double(1) / prediction[i]);
-        } else {
-            errorRef[i].get() = double(1) / (double(1) - prediction[i]);
-        }
-    }
-}
-
 int interpretNetworkOutput(const std::vector<double>& networkOutput) {
     double highestOutput = 0;
     int highestIndex = 0;
@@ -59,9 +49,9 @@ int main() {
             std::cout << "\n" << networkOutput[i] << " (" << expectation[i] << ")";
         }
 
-        binaryCrossEntropyDerivative(std::vector<double>(networkOutput.begin(), networkOutput.end()), expectation, networkError);
-        outputLayer.backPropogate(LEARNING_RATE);
-        hiddenLayer.backPropogate(LEARNING_RATE);
+        for(int i = 0; i < networkOutput.size(); i++) {
+            networkError[i].get() = LOSS.derivative(networkOutput[i], expectation[i]);
+        }
 
         for(int i = LAYERS.size() - 1; i >= 0; i--) {
             LAYERS[i] -> backPropogate(LEARNING_RATE);

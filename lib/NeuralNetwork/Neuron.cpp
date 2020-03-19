@@ -28,11 +28,11 @@ double Neuron::productSum() {
     return sum;
 }
 
-void Neuron::forwardPropogate(std::function<double(double)> activation) {
+void Neuron::forwardPropogate(std::function<const double&(const double&)> activation) {
     output = activation(productSum());
 }
 
-void Neuron::backPropogate(std::function<double(double)> activationDerivative, const double& learningRate) {
+void Neuron::backPropogate(std::function<const double&(const double&)> activationDerivative, const double& learningRate) {
     double delta = activationDerivative(output) * error;
     error = 0;
     adjustWeights(delta, learningRate);

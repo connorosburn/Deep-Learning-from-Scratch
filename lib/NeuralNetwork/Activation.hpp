@@ -14,18 +14,18 @@
 
 namespace Activation {
     struct Activation {
-        Activation(std::function<double(double)> act, std::function<double(double)> der):
+        Activation(std::function<double(const double&)> act, std::function<double(const double&)> der):
         activation(act), derivative(der) {
 
         }
-        std::function<double(double)> activation;
-        std::function<double(double)> derivative;
+        std::function<double(const double&)> activation;
+        std::function<double(const double&)> derivative;
     };
 
     const Activation relu (
 
         //relu
-        [](double x) -> double {
+        [](const double& x) -> double {
             if(x > 0) {
                 return x;
             } else {
@@ -34,7 +34,7 @@ namespace Activation {
         },
         
         //relu derivative
-        [](double x) -> double {
+        [](const double& x) -> double {
             if(x > 0) {
                 return 1;
             } else {
@@ -46,21 +46,23 @@ namespace Activation {
     const Activation sigmoid (
 
         //sigmoid
-        [](double x) -> double {
-            const int OVERFLOW_MAX = 9;
-            const int UNDERFLOW_MIN = -9;
+        [](const double& x) -> double {
+            const double OVERFLOW_MAX = 9;
+            const double UNDERFLOW_MIN = -9;
+
+            const double* stableX = &x;
 
             if(x > OVERFLOW_MAX) {
-                x = OVERFLOW_MAX;
+                stableX = &OVERFLOW_MAX;
             } else if(x < UNDERFLOW_MIN) {
-                x = UNDERFLOW_MIN;
+                stableX = &UNDERFLOW_MIN;
             }
 
-            return double(1) / (double(1) + std::exp(double(-1) * x));
+            return double(1) / (double(1) + std::exp(double(-1) * (*stableX)));
         },
         
         //sigmoid derivative
-        [](double x) -> double {
+        [](const double& x) -> double {
             return x * (double(1) - x);
         }
     );
