@@ -7,7 +7,7 @@
 #include <functional>
 #include <vector>
 
-class FullyConnectedLayer {
+class FullyConnectedLayer : public Layer {
     public:
         FullyConnectedLayer(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size, const Activation::Activation& activationPair);
         void forwardPropogate();
