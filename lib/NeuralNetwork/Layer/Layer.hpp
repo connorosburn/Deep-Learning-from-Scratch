@@ -1,17 +1,24 @@
-#ifndef LAYER_HPP
-#define LAYER_HPP
+#ifndef FULLY_CONNECTED_LAYER_HPP
+#define FULLY_CONNECTED_LAYER_HPP
+
+#include "Layer.hpp"
+#include "../Neuron.hpp"
+#include "../Activation.hpp"
+#include <functional>
 #include <vector>
 
 class Layer {
     public:
-        Layer() {};
-        virtual void forwardPropogate() = 0;
-        virtual void backPropogate(const double& learningRate) = 0;
-        virtual std::vector<std::reference_wrapper<double>>  getOutputs() = 0;
-        virtual std::vector<std::reference_wrapper<double>> getErrors() = 0;
+        Layer(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size, const Activation::Activation& activationPair);
+        void forwardPropogate();
+        void backPropogate(const double& learningRate);
+        std::vector<std::reference_wrapper<double>>  getOutputs();
+        std::vector<std::reference_wrapper<double>> getErrors();
 
-    protected:
-        initializeNeurons(std::vector<std::reference_wrapper<double>>  outputs, std::vector<std::reference_wrapper<double>> errors, int size);
+    private:
+        const Activation::Activation& activation;
+        std::vector<Neuron> neurons;
+        void initializeNeurons(std::vector<std::reference_wrapper<double>>  outputs, std::vector<std::reference_wrapper<double>> errors, int size);
 };
 
 #endif
