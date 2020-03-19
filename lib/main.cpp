@@ -6,16 +6,7 @@
 #include "NeuralNetwork/Activation.hpp"
 #include <functional>
 #include "MNISTFashion/MNISTLoader.hpp"
-
-void binaryCrossEntropyDerivative(const std::vector<double>& prediction, const std::vector<double>& expectation, std::vector<std::reference_wrapper<double>> errorRef) {
-    for(int i = 0; i < prediction.size(); i++) {
-        if(expectation[i] > 0) {
-            errorRef[i].get() = double(-1) * (double(1) / prediction[i]);
-        } else {
-            errorRef[i].get() = double(1) / (double(1) - prediction[i]);
-        }
-    }
-}
+#include "network_parameters.hpp"
 
 int interpretNetworkOutput(const std::vector<double>& networkOutput) {
     double highestOutput = 0;
@@ -36,25 +27,19 @@ std::vector<double> labelVector(int label) {
 }
 
 int main() {
-
     MNISTLoader loader;
-    const double LEARNING_RATE = 0.001;
 
-    std::array<double, 784> input;
-    std::vector<double> totalError(784, 0);
-    std::vector<std::reference_wrapper<double>> inRefs(input.begin(), input.end());
-    FullyConnectedLayer hiddenLayer(inRefs, {totalError.begin(), totalError.end()}, 500, Activation::relu);
-    FullyConnectedLayer outputLayer(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 10, Activation::sigmoid);
-    auto networkOutput = outputLayer.getOutputs();
-    auto networkError = outputLayer.getErrors();
+    auto networkOutput = LAYERS.back() -> getOutputs();
+    auto networkError = LAYERS.back() -> getErrors();
 
     for(auto& data : loader.trainingData()) {
         for(int i = 0; i < input.size(); i++) {
             input[i] = data.image[i / 28][i % 28];
         }
         
-        hiddenLayer.forwardPropogate();
-        outputLayer.forwardPropogate();
+        for(int i = 0; i < LAYERS.size(); i++) {
+            LAYERS[i] -> forwardPropogate();
+        }
 
         std::cout << "\n\nExpectation: " << data.label;
         std::cout << "\nPrediction: " << interpretNetworkOutput(std::vector<double>(networkOutput.begin(), networkOutput.end()));
@@ -64,8 +49,12 @@ int main() {
             std::cout << "\n" << networkOutput[i] << " (" << expectation[i] << ")";
         }
 
-        binaryCrossEntropyDerivative(std::vector<double>(networkOutput.begin(), networkOutput.end()), expectation, networkError);
-        outputLayer.backPropogate(LEARNING_RATE);
-        hiddenLayer.backPropogate(LEARNING_RATE);
+        for(int i = 0; i < networkOutput.size(); i++) {
+            networkError[i].get() = LOSS.derivative(networkOutput[i], expectation[i]);
+        }
+
+        for(int i = LAYERS.size() - 1; i >= 0; i--) {
+            LAYERS[i] -> backPropogate(LEARNING_RATE);
+        }
     }
 }
