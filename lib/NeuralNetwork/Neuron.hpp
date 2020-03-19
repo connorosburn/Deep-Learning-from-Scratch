@@ -7,11 +7,13 @@
 class Neuron {
     public:
         Neuron(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors);
-        double productSum();
         void forwardPropogate(std::function<const double&(const double&)> activation);
         void backPropogate(std::function<const double&(const double&)> activationDerivative, const double& learningRate);
         double& getOutput();
         double& getError();
+
+    protected:
+        double productSum();
 
     private:
         std::vector<Weight> weights;

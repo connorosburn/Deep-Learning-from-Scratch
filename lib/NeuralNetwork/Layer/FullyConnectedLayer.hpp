@@ -18,8 +18,6 @@ class FullyConnectedLayer : public Layer {
     private:
         const Activation::Activation& activation;
         std::vector<Neuron> neurons;
-        void initializeNeurons(std::vector<std::reference_wrapper<double>>  outputs, std::vector<std::reference_wrapper<double>> errors, int size);
-
 };
 
 #endif
