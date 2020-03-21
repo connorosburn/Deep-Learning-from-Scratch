@@ -6,6 +6,7 @@
 #include "../Activation.hpp"
 #include <functional>
 #include <vector>
+#include <memory>
 
 struct LayerError : std::exception {
   const char* what() const noexcept {return "Neuron must receive the same number of output references as it receives error references\n";}
@@ -21,7 +22,8 @@ class Layer {
         virtual std::vector<std::reference_wrapper<double>> getErrors();
 
     protected:
-        std::vector<Neuron> neurons;
+        std::vector<std::shared_ptr<Neuron>> neurons;
+        Layer(): activation(Activation::null) {};
 
     private:
         const Activation::Activation& activation;

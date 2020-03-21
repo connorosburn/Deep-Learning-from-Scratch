@@ -15,35 +15,35 @@ void Layer::initializeNeurons(std::vector<std::reference_wrapper<double>>  outpu
         throw LayerError();
     } else {
         for(int i = 0; i < size; i++) {
-            neurons.emplace_back(outputs, errors);
+            neurons.emplace_back(new Neuron(outputs, errors));
         }
     }
 }
 
 void Layer::forwardPropogate() {
-    for(Neuron& neuron : neurons) {
-        neuron.forwardPropogate(activation.activation);
+    for(auto& neuron : neurons) {
+        neuron->forwardPropogate(activation.activation);
     }
 }
 
 void Layer::backPropogate(const double& learningRate) {
-    for(Neuron& neuron : neurons) {
-        neuron.backPropogate(activation.derivative, learningRate);
+    for(auto& neuron : neurons) {
+        neuron->backPropogate(activation.derivative, learningRate);
     }
 }
 
 std::vector<std::reference_wrapper<double>>  Layer::getOutputs() {
     std::vector<std::reference_wrapper<double>> outputs;
-    for(Neuron& neuron : neurons) {
-        outputs.emplace_back(neuron.getOutput());
+    for(auto& neuron : neurons) {
+        outputs.emplace_back(neuron->getOutput());
     }
     return outputs;
 }
 
 std::vector<std::reference_wrapper<double>> Layer::getErrors() {
     std::vector<std::reference_wrapper<double>> errors;
-    for(Neuron& neuron : neurons) {
-        errors.emplace_back(neuron.getError());
+    for(auto& neuron : neurons) {
+        errors.emplace_back(neuron->getError());
     }
     return errors;
 }
