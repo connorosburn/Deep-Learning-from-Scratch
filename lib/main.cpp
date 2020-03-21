@@ -1,10 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <array>
 #include <cmath>
-#include "NeuralNetwork/Layer/FullyConnectedLayer.hpp"
-#include "NeuralNetwork/Activation.hpp"
-#include <functional>
 #include "MNISTFashion/MNISTLoader.hpp"
 #include "network_parameters.hpp"
 
@@ -33,8 +29,8 @@ int main() {
     auto networkError = LAYERS.back() -> getErrors();
 
     for(auto& data : loader.trainingData()) {
-        for(int i = 0; i < input.size(); i++) {
-            input[i] = data.image[i / 28][i % 28];
+        for(int i = 0; i < INPUT.size(); i++) {
+            INPUT[i] = data.image[i / 28][i % 28];
         }
         
         for(int i = 0; i < LAYERS.size(); i++) {
