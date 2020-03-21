@@ -1,21 +1,22 @@
 #include "Layer.hpp"
 
-struct LayerError : std::exception {
-  const char* what() const noexcept {return "Neuron must receive the same number of output references as it receives error references\n";}
-};
-
 Layer::Layer(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size, const Activation::Activation& activationPair):
 activation(activationPair) {
-    if(backOutputs.size() != backErrors.size()) {
-        throw LayerError();
-    } else {
-        initializeNeurons(backOutputs, backErrors, size);
-    }
+    initializeNeurons(backOutputs, backErrors, size);
+}
+
+Layer::Layer(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size):
+activation(Activation::null) {
+    initializeNeurons(backOutputs, backErrors, size);
 }
 
 void Layer::initializeNeurons(std::vector<std::reference_wrapper<double>>  outputs, std::vector<std::reference_wrapper<double>> errors, int size) {
-    for(int i = 0; i < size; i++) {
-        neurons.emplace_back(outputs, errors);
+    if(outputs.size() != errors.size()) {
+        throw LayerError();
+    } else {
+        for(int i = 0; i < size; i++) {
+            neurons.emplace_back(outputs, errors);
+        }
     }
 }
 

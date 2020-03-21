@@ -22,6 +22,11 @@ namespace Activation {
         std::function<double(const double&)> derivative;
     };
 
+    const Activation null (
+        [](const double& x) -> double {return 0;},
+        [](const double& x) -> double {return 0;}
+    );
+
     const Activation relu (
 
         //relu

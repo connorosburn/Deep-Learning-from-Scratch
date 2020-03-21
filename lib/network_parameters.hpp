@@ -1,5 +1,6 @@
 #include "NeuralNetwork/Layer/Layer.hpp"
 #include "NeuralNetwork/Layer/Layer.hpp"
+#include "NeuralNetwork/Layer/SoftmaxLayer.hpp"
 #include "NeuralNetwork/Loss.hpp"
 #include <array>
 
@@ -9,7 +10,7 @@ std::array<double, 784> INPUT;
 std::array<double, 784> TOTAL_ERROR;
 
 Layer hiddenLayer({INPUT.begin(), INPUT.end()}, {TOTAL_ERROR.begin(), TOTAL_ERROR.end()}, 500, Activation::relu);
-Layer outputLayer(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 10, Activation::sigmoid);
+SoftmaxLayer outputLayer(hiddenLayer.getOutputs(), hiddenLayer.getErrors(), 10);
 
 auto LOSS = Loss::binaryCrossEntropy;
 

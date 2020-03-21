@@ -5,20 +5,10 @@
 
 class SoftmaxLayer : public Layer {
     public:
-        SoftmaxLayer(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size);
+        SoftmaxLayer(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size):
+        Layer(backOutputs, backErrors, size) {};
         void forwardPropogate();
-
-    private:
-        class SoftmaxNeuron : public Neuron {
-            public:
-                const double& calculateNumerator();
-                void softmax(const double& denominator);
-
-            private:
-                double numerator;
-        };
-
-        std::vector<SoftmaxNeuron> neurons;
+        void backPropogate(const double& learningRate);
 };
 
 #endif
