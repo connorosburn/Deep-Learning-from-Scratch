@@ -8,18 +8,13 @@
 #include <vector>
 #include <memory>
 
-struct LayerError : std::exception {
-  const char* what() const noexcept {return "Neuron must receive the same number of output references as it receives error references\n";}
-};
-
 class Layer {
     public:
-        Layer(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size, const Activation::Activation& activationPair);
-        Layer(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors, int size);
+        Layer(std::vector<NeuronInterface>  backInterfaces, int size, const Activation::Activation& activationPair);
+        Layer(std::vector<NeuronInterface>  backInterfaces, int size);
         virtual void forwardPropogate();
         virtual void backPropogate(const double& learningRate);
-        virtual std::vector<std::reference_wrapper<double>>  getOutputs();
-        virtual std::vector<std::reference_wrapper<double>> getErrors();
+        std::vector<NeuronInterface> getInterfaces();
 
     protected:
         std::vector<std::shared_ptr<Neuron>> neurons;
@@ -27,7 +22,7 @@ class Layer {
 
     private:
         const Activation::Activation& activation;
-        void initializeNeurons(std::vector<std::reference_wrapper<double>> outputs, std::vector<std::reference_wrapper<double>> errors, int size);
+        void initializeNeurons(std::vector<NeuronInterface>  backInterfaces, int size);
 };
 
 #endif
