@@ -4,12 +4,12 @@
 #include "MNISTFashion/MNISTLoader.hpp"
 #include "network_parameters.hpp"
 
-int interpretNetworkOutput(const std::vector<double>& networkOutput) {
+int interpretNetworkOutput(const std::vector<NeuronInterface>& interfaces) {
     double highestOutput = 0;
     int highestIndex = 0;
-    for(int i = 0; i < networkOutput.size(); i++) {
-        if(networkOutput[i] > highestOutput) {
-            highestOutput = networkOutput[i];
+    for(int i = 0; i < interfaces.size(); i++) {
+        if(interfaces[i].output > highestOutput) {
+            highestOutput = interfaces[i].output;
             highestIndex = i;
         }
     }
@@ -25,8 +25,7 @@ std::vector<double> labelVector(int label) {
 int main() {
     MNISTLoader loader;
 
-    auto networkOutput = LAYERS.back() -> getOutputs();
-    auto networkError = LAYERS.back() -> getErrors();
+    auto networkInterface = LAYERS.back() -> getInterfaces();
 
     for(auto& data : loader.trainingData()) {
         for(int i = 0; i < INPUT.size(); i++) {
@@ -38,15 +37,15 @@ int main() {
         }
 
         std::cout << "\n\nExpectation: " << data.label;
-        std::cout << "\nPrediction: " << interpretNetworkOutput(std::vector<double>(networkOutput.begin(), networkOutput.end()));
+        std::cout << "\nPrediction: " << interpretNetworkOutput(networkInterface);
         std::cout << "\n\nRaw Outputs:";
         std::vector<double> expectation = labelVector(data.label);
-        for(int i = 0; i < networkOutput.size(); i++) {
-            std::cout << "\n" << networkOutput[i] << " (" << expectation[i] << ")";
+        for(int i = 0; i < networkInterface.size(); i++) {
+            std::cout << "\n" << networkInterface[i].output << " (" << expectation[i] << ")";
         }
 
-        for(int i = 0; i < networkOutput.size(); i++) {
-            networkError[i].get() = LOSS.derivative(networkOutput[i], expectation[i]);
+        for(int i = 0; i < networkInterface.size(); i++) {
+            networkInterface[i].errorAccumulator(LOSS.derivative(networkInterface[i].output, expectation[i]));
         }
 
         for(int i = LAYERS.size() - 1; i >= 0; i--) {

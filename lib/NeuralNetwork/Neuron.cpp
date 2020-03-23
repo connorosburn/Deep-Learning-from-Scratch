@@ -1,29 +1,18 @@
 #include "Neuron.hpp"
-#include <iostream>
 
-
-struct NeuronError : std::exception {
-  const char* what() const noexcept {return "Neuron must receive the same number of output references as it receives error references\n";}
-};
-
-Neuron::Neuron(std::vector<std::reference_wrapper<double>>  backOutputs, std::vector<std::reference_wrapper<double>> backErrors): bias(0), error(0) {
-    if(backOutputs.size() != backErrors.size()) {
-        throw NeuronError();
-    } else {
-        initializeWeights(backOutputs, backErrors);
-    }
-}
-
-void Neuron::initializeWeights(std::vector<std::reference_wrapper<double>>  outputs, std::vector<std::reference_wrapper<double>> errors) {
-    for(int i = 0; i < outputs.size(); i++) {
-        weights.emplace_back(outputs[i].get(), errors[i].get());
+Neuron::Neuron(std::vector<NeuronInterface>  backInterfaces): 
+bias(0), 
+error(0),
+interface([this](const double& addition) -> void {this->error += addition;}, output) {
+    for(const auto& interface : backInterfaces) {
+        weights.emplace_back(interface);
     }
 }
 
 double Neuron::productSum() {
     double sum = bias;
     for(const Weight& weight : weights) {
-        sum += (weight.value * weight.backOutput);
+        sum += (weight.value * weight.backInterface.output);
     }
     return sum;
 }
@@ -48,23 +37,18 @@ void Neuron::softmax(const double& numerator, const double& denominator) {
 }
 
 void Neuron::backPropogate(std::function<const double&(const double&)> activationDerivative, const double& learningRate) {
-    double delta = activationDerivative(output) * error;
+    adjustWeights(activationDerivative(output) * error, learningRate);
     error = 0;
-    adjustWeights(delta, learningRate);
 }
 
 void Neuron::adjustWeights(double delta, const double& learningRate) {
     for(Weight& weight : weights) {
-        weight.backError += (weight.value * delta);
-        weight.value -= (weight.backOutput * delta * learningRate);
+        weight.backInterface.errorAccumulator(weight.value * delta);
+        weight.value -= (weight.backInterface.output * delta * learningRate);
     }
     bias -= delta * learningRate;
 }
 
-double& Neuron::getOutput() {
-    return output;
-}
-
-double& Neuron::getError() {
-    return error;
+const NeuronInterface& Neuron::getInterface() {
+    return interface;
 }

@@ -1,11 +1,26 @@
 #ifndef WEIGHT_HPP
 #define WEIGHT_HPP
 
+#include <functional>
+#include <vector>
+
+struct NeuronInterface {
+    NeuronInterface(std::function<void(const double&)> errorAcc, const double& out):
+    errorAccumulator(errorAcc), output(out) {};
+    std::function<void(const double&)> errorAccumulator;
+    const double& output;
+};
+
+
+struct InputInterface {
+    InputInterface(std::vector<std::reference_wrapper<double>> input);
+    std::vector<NeuronInterface> interfaces;
+};
+
 struct Weight {
-    Weight(const double& output, double& error);
+    Weight(NeuronInterface interface);
     double value;
-    const double& backOutput;
-    double& backError;
+    NeuronInterface backInterface;
 };
 
 #endif
