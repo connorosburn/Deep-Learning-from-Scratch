@@ -1,4 +1,6 @@
 #include "Neuron.hpp"
+#include <cmath>
+#include <cfloat>
 
 Neuron::Neuron(std::vector<NeuronInterface>  backInterfaces): 
 bias(0), 
@@ -22,17 +24,11 @@ void Neuron::forwardPropogate(std::function<const double&(const double&)> activa
 }
 
 void Neuron::softmax(const double& numerator, const double& denominator) {
-    // this smells. fix, but figure out a way to make the rounding to 0 be a problem
-    const double OVERFLOW_MAX = 0.9999999;
-    const double UNDERFLOW_MIN = 0.0000001;
-
-    double raw = numerator / denominator;
-    if(raw > OVERFLOW_MAX) {
-        output = OVERFLOW_MAX;
-    } else if(raw < UNDERFLOW_MIN) {
-        output = UNDERFLOW_MIN;
-    } else {
-        output = raw;
+    output = numerator / denominator;
+    if(output == 0) {
+        output = DBL_MIN;
+    } else if(output == 1) {
+        output = std::nexttoward(double(1), double(0));
     }
 }
 
