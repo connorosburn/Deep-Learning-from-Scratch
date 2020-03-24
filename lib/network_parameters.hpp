@@ -5,15 +5,12 @@
 #include <array>
 
 const double LEARNING_RATE = 0.001;
+const int EPOCHS = 2;
+bool VERBOSE_READOUT = false;
 
-std::array<double, 784> INPUT;
-std::array<double, 784> TOTAL_ERROR;
+std::vector<std::vector<double>> INPUT(28, std::vector<double>(28, 0));
 
-
-//yea, when I pull this out to the input layer it feels weird
-InputInterface INPUT_INTERFACE({INPUT.begin(), INPUT.end()});
-
-Layer hiddenLayer(INPUT_INTERFACE.interfaces, 500, Activation::relu);
+Layer hiddenLayer(InputInterface(INPUT).interfaces, 100, Activation::relu);
 SoftmaxLayer outputLayer(hiddenLayer.getInterfaces(), 10);
 
 auto LOSS = Loss::binaryCrossEntropy;

@@ -2,10 +2,11 @@
 #include <random>
 
 
-InputInterface::InputInterface(std::vector<std::reference_wrapper<double>> input) {
-    for(std::reference_wrapper<double> ref : input) {
-        interfaces.emplace_back([](const double& n){}, ref.get());
-    }
+InputInterface::InputInterface(std::vector<std::vector<double>>& input) {
+    for(std::vector<double>& row : input)
+        for(double& pixel : row) {
+            interfaces.emplace_back([](const double& n){}, pixel);
+        }
 }
 
 Weight::Weight(NeuronInterface interface): backInterface(interface) {
