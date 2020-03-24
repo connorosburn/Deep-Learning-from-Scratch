@@ -24,11 +24,13 @@ void Neuron::forwardPropogate(std::function<const double&(const double&)> activa
 }
 
 void Neuron::softmax(const double& numerator, const double& denominator) {
+    const double MAX = 0.9999999;
+    const double MIN = 0.0000001;
     output = numerator / denominator;
-    if(output == 0) {
-        output = DBL_MIN;
-    } else if(output == 1) {
-        output = std::nexttoward(double(1), double(0));
+    if(output > MAX) {
+        output = MAX;
+    } else if(output < MIN) {
+        output = MIN;
     }
 }
 

@@ -19,6 +19,7 @@ class Layer {
     protected:
         std::vector<std::shared_ptr<Neuron>> neurons;
         Layer(): activation(Activation::null) {};
+        Layer(const Activation::Activation& activationPair): activation(activationPair) {};
 
     private:
         const Activation::Activation& activation;
