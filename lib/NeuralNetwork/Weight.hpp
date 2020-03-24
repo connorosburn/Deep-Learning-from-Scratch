@@ -13,7 +13,7 @@ struct NeuronInterface {
 
 
 struct InputInterface {
-    InputInterface(std::vector<std::reference_wrapper<double>> input);
+    InputInterface(std::vector<std::vector<double>>& input);
     std::vector<NeuronInterface> interfaces;
 };
 
