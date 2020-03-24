@@ -14,7 +14,7 @@ struct NeuronInterface {
 
 struct InputInterface {
     InputInterface(std::vector<std::vector<double>>& input);
-    std::vector<NeuronInterface> interfaces;
+    std::vector<std::vector<NeuronInterface>> interfaces;
 };
 
 struct Weight {
