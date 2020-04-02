@@ -16,8 +16,7 @@ class MNISTLoader {
         std::vector<DataPair> testData();
 
     private:
-        std::vector<DataPair> loadData(std::string filename);
-        DataPair readRow(std::string& row);
+        std::vector<DataPair> loadData(std::string imageFileName, std::string labelFileName);
         std::vector<DataPair> training;
         std::vector<DataPair> test;
 };
