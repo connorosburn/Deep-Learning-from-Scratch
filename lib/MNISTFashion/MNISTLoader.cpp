@@ -49,14 +49,14 @@ std::vector<DataPair> MNISTLoader::loadData(std::string imageFileName, std::stri
         for(int y = 0;  y < 28; y++) {
             image.emplace_back();
             for(int x = 0; x < 28; x++) {
-                unsigned int pixel;
+                unsigned char pixel;
                 imageFile.read((char*)&pixel, 1);
-                image.back().emplace_back(double(pixel) / double(255));
+                image.back().emplace_back(double(int(pixel))/ double(255));
             }
         }
-        unsigned int label;
+        unsigned char label;
         labelFile.read((char*)&label, 1);
-        data.emplace_back(label, image);
+        data.emplace_back(int(label), image);
     }
     return data;
 }

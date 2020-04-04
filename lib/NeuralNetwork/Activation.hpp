@@ -48,6 +48,27 @@ namespace Activation {
         }
     );
 
+    const Activation leakyRelu (
+
+        //relu
+        [](const double& x) -> double {
+            if(x > 0) {
+                return x;
+            } else {
+                return 0.00001;
+            }
+        },
+        
+        //relu derivative
+        [](const double& x) -> double {
+            if(x > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    );
+
     const Activation sigmoid (
 
         //sigmoid

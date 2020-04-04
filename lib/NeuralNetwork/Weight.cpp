@@ -12,9 +12,13 @@ InputInterface::InputInterface(std::vector<std::vector<double>>& input) {
 }
 
 Weight::Weight(NeuronInterface interface): backInterface(interface) {
+    value = generateRandom();
+}
+
+double Weight::generateRandom() {
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::normal_distribution<double> d{0,1};
-    value = d(gen);
+    return d(gen);
 }
 

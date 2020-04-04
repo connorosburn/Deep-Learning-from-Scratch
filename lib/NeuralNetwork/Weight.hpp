@@ -19,6 +19,7 @@ struct InputInterface {
 
 struct Weight {
     Weight(NeuronInterface interface);
+    static double generateRandom();
     double value;
     NeuronInterface backInterface;
 };
