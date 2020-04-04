@@ -1,8 +1,8 @@
 #include "ConvolutionalLayer.hpp"
 #include <iostream>
 
-ConvolutionalLayer::ConvolutionalLayer(std::vector<std::vector<NeuronInterface>> interfaces, const int& filterWidth, const int& filterHeight, const int& nudgeDistance, const Activation::Activation& activationPair):
-Layer(activationPair) {
+ConvolutionalLayer::ConvolutionalLayer(std::vector<std::vector<NeuronInterface>> interfaces, const int& filterWidth, const int& filterHeight, const int& nudgeDistance, const Activation::Activation& activationPair, bool batchNorm):
+Layer(activationPair, batchNorm) {
     rows = 0;
     for(int y = 0; y < interfaces.size() - filterHeight; y += nudgeDistance) {
         for(int x = 0; x < interfaces[y].size() - filterWidth; x += nudgeDistance) {
@@ -12,7 +12,7 @@ Layer(activationPair) {
                     neuronInterfaces.emplace_back(interfaces[i + y][j + x]);
                 }
             }
-            neurons.emplace_back(new Neuron(neuronInterfaces));
+            neurons.emplace_back(new Neuron(neuronInterfaces, !batchNorm));
         }
         rows++;
     }

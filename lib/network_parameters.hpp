@@ -7,7 +7,7 @@
 #include "NeuralNetwork/Layer/MaxPoolingLayer.hpp"
 
 const double LEARNING_RATE = 0.001;
-const int EPOCHS = 20;
+const int EPOCHS = 5;
 bool VERBOSE_READOUT = false;
 
 std::vector<std::vector<double>> INPUT(28, std::vector<double>(28, 0));
@@ -19,9 +19,9 @@ std::vector<std::vector<double>> INPUT(28, std::vector<double>(28, 0));
     NOTE: REMEMBER TO MAKE SURE LAYERS ARE INCLUDED IN THE VECTOR OF LAYER POINTERS-- 
     ALSO MAKE THAT LESS ANNOYING AT SOME POINT
 */
-ConvolutionalLayer c1(InputInterface(INPUT).interfaces, 3, 3, 1, Activation::relu);
+ConvolutionalLayer c1(InputInterface(INPUT).interfaces, 3, 3, 1, Activation::relu, true);
 MaxPoolingLayer p1(c1.getInterfaces2d(), 2, 2);
-Layer f1(p1.getInterfaces(), 169, Activation::relu);
+Layer f1(p1.getInterfaces(), 169, Activation::relu, true);
 SoftmaxLayer ol(f1.getInterfaces(), 10);
 
 auto LOSS = Loss::binaryCrossEntropy;
