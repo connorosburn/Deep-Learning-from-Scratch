@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.17)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+project(mnist)
+file(GLOB_RECURSE SRCFILES lib/*.cpp lib/*.hpp)
+ADD_EXECUTABLE(mnist ${SRCFILES})

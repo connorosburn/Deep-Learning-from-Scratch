@@ -1,0 +1,3 @@
+/Users/connorosburn/some_promises/mnist_classifier/CMakeFiles/rebuild_cache.dir
+/Users/connorosburn/some_promises/mnist_classifier/CMakeFiles/edit_cache.dir
+/Users/connorosburn/some_promises/mnist_classifier/CMakeFiles/mnist.dir
