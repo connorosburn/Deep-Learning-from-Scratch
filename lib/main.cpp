@@ -55,8 +55,8 @@ void predictDataset(std::string setName, std::vector<DataPair> data, bool traini
     for(int d = 0; d < data.size(); d++) {
         INPUT.assign(data[d].image.begin(), data[d].image.end());
         
-        for(int i = 0; i < LAYERS.size(); i++) {
-            LAYERS[i] -> forwardPropogate();
+        for(Layer* layer : LAYERS) {
+            layer -> forwardPropogate();
         }
 
         std::vector<double> expectation = labelVector(data[d].label);
