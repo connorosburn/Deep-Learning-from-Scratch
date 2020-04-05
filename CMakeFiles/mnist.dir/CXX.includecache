@@ -6,14 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/Users/connorosburn/some_promises/mnist_classifier/lib/MNISTFashion/MNISTLoader.cpp
-MNISTLoader.hpp
-/Users/connorosburn/some_promises/mnist_classifier/lib/MNISTFashion/MNISTLoader.hpp
-fstream
--
-iostream
--
-
 /Users/connorosburn/some_promises/mnist_classifier/lib/MNISTFashion/MNISTLoader.hpp
 string
 -
@@ -24,21 +16,9 @@ vector
 cmath
 -
 
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/ConvolutionalLayer.cpp
-ConvolutionalLayer.hpp
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/ConvolutionalLayer.hpp
-iostream
--
-
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/ConvolutionalLayer.hpp
 Layer.hpp
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/Layer.hpp
-
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/Layer.cpp
-Layer.hpp
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/Layer.hpp
-iostream
--
 
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/Layer.hpp
 Layer.hpp
@@ -54,19 +34,9 @@ vector
 memory
 -
 
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/MaxPoolingLayer.cpp
-MaxPoolingLayer.hpp
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/MaxPoolingLayer.hpp
-iostream
--
-
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/MaxPoolingLayer.hpp
 Layer.hpp
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/Layer.hpp
-
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/SoftmaxLayer.cpp
-SoftmaxLayer.hpp
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/SoftmaxLayer.hpp
 
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Layer/SoftmaxLayer.hpp
 Layer.hpp
@@ -74,27 +44,11 @@ Layer.hpp
 
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Loss.hpp
 
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Neuron.cpp
-Neuron.hpp
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Neuron.hpp
-cmath
--
-cfloat
--
-iostream
--
-
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Neuron.hpp
 vector
 -
 Weight.hpp
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Weight.hpp
-
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Weight.cpp
-Weight.hpp
-/Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Weight.hpp
-random
--
 
 /Users/connorosburn/some_promises/mnist_classifier/lib/NeuralNetwork/Weight.hpp
 functional
