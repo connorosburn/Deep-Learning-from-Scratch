@@ -1,7 +1,7 @@
 #include "MaxPoolingLayer.hpp"
 #include <iostream>
 
-MaxPoolingLayer::MaxPoolingLayer(std::vector<std::vector<NeuronInterface>> interfaces, const int& poolWidth, const int& poolHeight) {
+MaxPoolingLayer::MaxPoolingLayer(std::vector<std::vector<NeuronInterface>> interfaces, const int poolWidth, const int poolHeight) {
     rows = 0;
     for(int i = 0; i < interfaces.size(); i += poolHeight) {
         rows++;
@@ -23,7 +23,7 @@ void MaxPoolingLayer::forwardPropogate() {
     }
 }
 
-void MaxPoolingLayer::backPropogate(const double& learningRate) {
+void MaxPoolingLayer::backPropogate(const double learningRate) {
     for(PoolingCluster& cluster : clusters) {
         cluster.backPropogate();
     }
@@ -53,7 +53,7 @@ MaxPoolingLayer::PoolingCluster::PoolingCluster(std::vector<NeuronInterface> poo
 }
 
 NeuronInterface MaxPoolingLayer::PoolingCluster::getInterface() {
-    return NeuronInterface([this](const double& e){this->error += e;}, output);
+    return NeuronInterface([this](double e){this->error += e;}, output);
 }
 
 void MaxPoolingLayer::PoolingCluster::forwardPropogate() {

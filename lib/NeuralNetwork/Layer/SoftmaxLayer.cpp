@@ -36,8 +36,8 @@ void SoftmaxLayer::forwardPropogate() {
     }
 }
 
-void SoftmaxLayer::backPropogate(const double& learningRate) {
+void SoftmaxLayer::backPropogate(const double learningRate) {
     for(auto& neuron : neurons) {
-        neuron->backPropogate([](const double& x) -> double {return x * (double(1) - x);}, learningRate);
+        neuron->backPropogate([](const double x) -> double {return x * (1.0 - x);}, learningRate);
     }
 }

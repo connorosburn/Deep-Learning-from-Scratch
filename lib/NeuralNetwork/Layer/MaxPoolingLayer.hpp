@@ -5,9 +5,9 @@
 
 class MaxPoolingLayer : public Layer {
     public:
-        MaxPoolingLayer(std::vector<std::vector<NeuronInterface>> interfaces, const int& poolWidth, const int& poolHeight);
+        MaxPoolingLayer(std::vector<std::vector<NeuronInterface>> interfaces, const int poolWidth, const int poolHeight);
         void forwardPropogate();
-        void backPropogate(const double& learningRate);
+        void backPropogate(const double learningRate);
         std::vector<NeuronInterface> getInterfaces();
         std::vector<std::vector<NeuronInterface>> getInterfaces2d();
 

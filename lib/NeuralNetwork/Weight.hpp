@@ -5,9 +5,9 @@
 #include <vector>
 
 struct NeuronInterface {
-    NeuronInterface(std::function<void(const double&)> errorAcc, const double& out):
+    NeuronInterface(std::function<void(double)> errorAcc, const double& out):
     errorAccumulator(errorAcc), output(out) {};
-    std::function<void(const double&)> errorAccumulator;
+    std::function<void(double)> errorAccumulator;
     const double& output;
 };
 
