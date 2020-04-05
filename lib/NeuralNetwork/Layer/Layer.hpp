@@ -13,7 +13,7 @@ class Layer {
         Layer(std::vector<NeuronInterface>  backInterfaces, int size, const Activation::Activation& activationPair, bool batchNormalization);
         Layer(std::vector<NeuronInterface>  backInterfaces, int size, bool batchNormalization);
         virtual void forwardPropogate();
-        virtual void backPropogate(const double& learningRate);
+        virtual void backPropogate(const double learningRate);
         std::vector<NeuronInterface> getInterfaces();
 
     protected:

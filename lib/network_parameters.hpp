@@ -7,8 +7,8 @@
 #include "NeuralNetwork/Layer/MaxPoolingLayer.hpp"
 
 const double LEARNING_RATE = 0.001;
-const int EPOCHS = 5;
-bool VERBOSE_READOUT = false;
+const int EPOCHS = 10;
+const bool VERBOSE_READOUT = false;
 
 std::vector<std::vector<double>> INPUT(28, std::vector<double>(28, 0));
 

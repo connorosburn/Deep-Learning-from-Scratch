@@ -31,17 +31,17 @@ void Layer::forwardPropogate() {
         for(auto& neuron : neurons) {
             mean += neuron->productSum();
         }
-        mean /= double(neurons.size());
+        mean /= static_cast<double>(neurons.size());
 
         double variance = 0;
         scaleGrad = 0;
         for(auto& neuron : neurons) {
             double seed = neuron->getOutput() - mean;
-            variance += std::pow(seed, double(2));
-            scaleGrad += double(2) * seed;
+            variance += std::pow(seed, 2.0);
+            scaleGrad += 2.0 * seed;
         }
-        variance /= double(neurons.size());
-        scaleGrad /= double(neurons.size());
+        variance /= static_cast<double>(neurons.size());
+        scaleGrad /= static_cast<double>(neurons.size());
         for(auto& neuron : neurons) {
             neuron->normalize(mean, variance, scale, shift);
             neuron->activate(activation.activation);
@@ -53,7 +53,7 @@ void Layer::forwardPropogate() {
     }
 }
 
-void Layer::backPropogate(const double& learningRate) {
+void Layer::backPropogate(const double learningRate) {
     //I'd be mature if I both avoided naming that variable "layerror" AND making a comment about it.
     double layerError = 0;
     for(auto& neuron : neurons) {

@@ -17,21 +17,21 @@ std::vector<DataPair> MNISTLoader::testData() {
 }
 
 std::vector<DataPair> MNISTLoader::loadData(std::string imageFileName, std::string labelFileName) {
-    int imageHolder;
+    uint32_t imageHolder;
     std::ifstream imageFile;
     imageFile.open(imageFileName, std::ios::binary | std::ios::in);
     //reads past magic number
-    imageFile.read((char*)&imageHolder, 4);
+    imageFile.read(reinterpret_cast<char*>(&imageHolder), 4);
     //reads the number of examples
-    imageFile.read((char*)&imageHolder, 4);
+    imageFile.read(reinterpret_cast<char*>(&imageHolder), 4);
 
-    int labelHolder;
+    uint32_t labelHolder;
     std::ifstream labelFile;
     labelFile.open(labelFileName, std::ios::binary | std::ios::in);
     //reads past magic number
-    labelFile.read((char*)&labelHolder, 4);
+    labelFile.read(reinterpret_cast<char*>(&labelHolder), 4);
     //reads the number of examples
-    labelFile.read((char*)&labelHolder, 4);
+    labelFile.read(reinterpret_cast<char*>(&labelHolder), 4);
 
     int imageCount = ntohl(imageHolder);
     int labelCount = ntohl(labelHolder);
@@ -40,8 +40,10 @@ std::vector<DataPair> MNISTLoader::loadData(std::string imageFileName, std::stri
         throw "image and label counts must be the same";
     }
 
+    
     //skips past the row and column counts
-    imageFile.read((char*)&imageHolder, 8);
+    uint64_t garbage;
+    imageFile.read(reinterpret_cast<char*>(&garbage), 8);
 
     std::vector<DataPair> data;
     for(int i  = 0; i < imageCount; i++) {
@@ -50,13 +52,13 @@ std::vector<DataPair> MNISTLoader::loadData(std::string imageFileName, std::stri
             image.emplace_back();
             for(int x = 0; x < 28; x++) {
                 unsigned char pixel;
-                imageFile.read((char*)&pixel, 1);
-                image.back().emplace_back(double(int(pixel))/ double(255));
+                imageFile.read(reinterpret_cast<char*>(&pixel), 1);
+                image.back().emplace_back(static_cast<double>(static_cast<int>(pixel))/ 255.0);
             }
         }
         unsigned char label;
-        labelFile.read((char*)&label, 1);
-        data.emplace_back(int(label), image);
+        labelFile.read(reinterpret_cast<char*>(&label), 1);
+        data.emplace_back(static_cast<int>(label), image);
     }
     return data;
 }

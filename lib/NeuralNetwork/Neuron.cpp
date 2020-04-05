@@ -34,13 +34,6 @@ void Neuron::activate(std::function<double(double)> activation) {
     output = activation(output);
 }
 
-void Neuron::softmax(const double numerator, const double denominator) {
-    const double MAX = 0.9999999;
-    const double MIN = 0.0000001;
-    output = numerator / denominator;
-    std::clamp(output, MIN, MAX);
-}
-
 double Neuron::backPropogate(std::function<double(double)> activationDerivative, const double learningRate) {
     const double changeValue = activationDerivative(output) * error;
     adjustWeights(changeValue, learningRate);
