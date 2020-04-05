@@ -3,28 +3,28 @@
 
 namespace Loss {
     struct Loss {
-        Loss(std::function<double(const double&, const double&)> lossFunction, std::function<double(const double&, const double&)> lossDerivative): loss(lossFunction), derivative(lossDerivative) {};
-        std::function<double(const double&, const double&)> loss;
-        std::function<double(const double&, const double&)> derivative;
+        Loss(std::function<double(double, double)> lossFunction, std::function<double(double, double)> lossDerivative): loss(lossFunction), derivative(lossDerivative) {};
+        std::function<double(double, double)> loss;
+        std::function<double(double, double)> derivative;
     };
 
     const Loss binaryCrossEntropy (
 
         // binary cross entropy
-        [](const double& prediction, const double& expectation) -> double {
+        [](double prediction, double expectation) -> double {
             if(expectation == 1) {
-                return double(-1) * std::log(prediction);
+                return -1.0 * std::log(prediction);
             } else {
-                return double(-1) * std::log(double(1) - prediction);
+                return -1.0 * std::log(1.0 - prediction);
             }
         },
         
         // binary cross entropy derivative
-        [](const double& prediction, const double& expectation) -> double {
-            if(expectation == 1) {
-                return double(-1) * (double(1) / prediction);
+        [](double prediction, double expectation) -> double {
+            if(static_cast<int>(expectation) == 1) {
+                return -1.0 * (1.0 / prediction);
             } else {
-                return double(1) / (double(1) - prediction);
+                return 1.0 / (1.0 - prediction);
             }
         }
     );
@@ -32,13 +32,13 @@ namespace Loss {
     const Loss crossEntropy (
 
         // cross entropy
-        [](const double& prediction, const double& expectation) -> double {
-            return double(-1) * expectation * std::log(prediction);
+        [](double prediction, double expectation) -> double {
+            return -1.0 * expectation * std::log(prediction);
         },
         
         // cross entropy derivative
-        [](const double& prediction, const double& expectation) -> double {
-            return double(-1) * (expectation / prediction);
+        [](double prediction, double expectation) -> double {
+            return -1.0 * (expectation / prediction);
         }
     );
 }

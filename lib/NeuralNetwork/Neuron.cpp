@@ -7,7 +7,7 @@ Neuron::Neuron(std::vector<NeuronInterface>  backInterfaces, bool useBias):
 error(0),
 bias(0),
 adjustBias(useBias),
-interface([this](const double& addition) -> void {this->error += addition;}, output) {
+interface([this](double addition) -> void {this->error += addition;}, output) {
     for(const auto& interface : backInterfaces) {
         weights.emplace_back(interface);
     }
@@ -21,38 +21,34 @@ double Neuron::productSum() {
     return output;
 }
 
-void Neuron::normalize(const double& mean, const double& variance, const double& scale, const double& shift) {
+void Neuron::normalize(const double mean, const double variance, const double scale, const double shift) {
     output = (output - mean) / std::sqrt(variance + 0.0000001);
     output = (output * scale) + shift;
 }
 
-void Neuron::forwardPropogate(std::function<const double&(const double&)> activation) {
+void Neuron::forwardPropogate(std::function<double(double)> activation) {
     output = activation(productSum());
 }
 
-void Neuron::activate(std::function<const double&(const double&)> activation) {
+void Neuron::activate(std::function<double(double)> activation) {
     output = activation(output);
 }
 
-void Neuron::softmax(const double& numerator, const double& denominator) {
+void Neuron::softmax(const double numerator, const double denominator) {
     const double MAX = 0.9999999;
     const double MIN = 0.0000001;
     output = numerator / denominator;
-    if(output > MAX) {
-        output = MAX;
-    } else if(output < MIN) {
-        output = MIN;
-    }
+    std::clamp(output, MIN, MAX);
 }
 
-double Neuron::backPropogate(std::function<const double&(const double&)> activationDerivative, const double& learningRate) {
+double Neuron::backPropogate(std::function<double(double)> activationDerivative, const double learningRate) {
     const double changeValue = activationDerivative(output) * error;
     adjustWeights(changeValue, learningRate);
     error = 0;
     return changeValue;
 }
 
-void Neuron::adjustWeights(double delta, const double& learningRate) {
+void Neuron::adjustWeights(const double delta, const double learningRate) {
     for(Weight& weight : weights) {
         weight.backInterface.errorAccumulator(weight.value * delta);
         weight.value -= (weight.backInterface.output * delta * learningRate);
