@@ -31,8 +31,8 @@ void MaxPoolingLayer::backPropogate(const double learningRate) {
 
 std::vector<NeuronInterface> MaxPoolingLayer::getInterfaces() {
     std::vector<NeuronInterface> interfaces;
-    for(int i = 0; i < clusters.size(); i++) {
-        interfaces.emplace_back(clusters[i].getInterface());
+    for(auto& cluster : clusters) {
+        interfaces.emplace_back(cluster.getInterface());
     }
     return interfaces;
 }
@@ -59,10 +59,10 @@ NeuronInterface MaxPoolingLayer::PoolingCluster::getInterface() {
 void MaxPoolingLayer::PoolingCluster::forwardPropogate() {
     output = backInterfaces.front().output;
     lastMax = &backInterfaces.front();
-    for(int i = 1; i < backInterfaces.size(); i++) {
-        if(backInterfaces[i].output > output) {
-            output = backInterfaces[i].output;
-            lastMax = &backInterfaces[i];
+    for(auto& interface : backInterfaces) {
+        if(interface.output > output) {
+            output = interface.output;
+            lastMax = &interface;
         }
     }
 }
