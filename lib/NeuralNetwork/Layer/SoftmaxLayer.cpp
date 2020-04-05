@@ -1,5 +1,13 @@
 #include "SoftmaxLayer.hpp"
 
+double softmax(const double numerator, const double denominator) {
+    const double MAX = 0.9999999;
+    const double MIN = 0.0000001;
+    double output = numerator / denominator;
+    std::clamp(output, MIN, MAX);
+    return output;
+}
+
 void SoftmaxLayer::forwardPropogate() {
     double numerators[neurons.size()];
 
@@ -18,7 +26,13 @@ void SoftmaxLayer::forwardPropogate() {
     }
 
     for(int i = 0; i < neurons.size(); i++) {
-        neurons[i]->softmax(numerators[i], denominator);
+        neurons[i]->activate([&numerators, &i, &denominator](double z) {
+            const double MAX = 0.9999999;
+            const double MIN = 0.0000001;
+            double output = numerators[i] / denominator;
+            std::clamp(output, MIN, MAX);
+            return output;
+        });
     }
 }
 

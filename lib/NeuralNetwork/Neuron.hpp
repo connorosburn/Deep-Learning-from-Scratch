@@ -11,7 +11,6 @@ class Neuron {
         void normalize(const double mean, const double variance, const double scale, const double shift);
         void forwardPropogate(std::function<double(double)> activation);
         void activate(std::function<double(double)> activation);
-        void softmax(const double numerator, const double denominator);
         double backPropogate(std::function<double(double)> activationDerivative, const double learningRate);
         const NeuronInterface& getInterface();
         const double& getOutput() {return output;};
