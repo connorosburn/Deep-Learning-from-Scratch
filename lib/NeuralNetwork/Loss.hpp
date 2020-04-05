@@ -13,18 +13,18 @@ namespace Loss {
         // binary cross entropy
         [](double prediction, double expectation) -> double {
             if(expectation == 1) {
-                return double(-1) * std::log(prediction);
+                return -1.0 * std::log(prediction);
             } else {
-                return double(-1) * std::log(double(1) - prediction);
+                return -1.0 * std::log(1.0 - prediction);
             }
         },
         
         // binary cross entropy derivative
         [](double prediction, double expectation) -> double {
             if(static_cast<int>(expectation) == 1) {
-                return double(-1) * (double(1) / prediction);
+                return -1.0 * (1.0 / prediction);
             } else {
-                return double(1) / (double(1) - prediction);
+                return 1.0 / (1.0 - prediction);
             }
         }
     );
@@ -33,12 +33,12 @@ namespace Loss {
 
         // cross entropy
         [](double prediction, double expectation) -> double {
-            return double(-1) * expectation * std::log(prediction);
+            return -1.0 * expectation * std::log(prediction);
         },
         
         // cross entropy derivative
         [](double prediction, double expectation) -> double {
-            return double(-1) * (expectation / prediction);
+            return -1.0 * (expectation / prediction);
         }
     );
 }

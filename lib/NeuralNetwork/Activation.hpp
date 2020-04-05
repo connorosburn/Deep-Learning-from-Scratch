@@ -62,7 +62,7 @@ namespace Activation {
         //relu derivative
         [](double x) -> double {
             if(x > 0) {
-                return 1;
+                return 1.0;
             } else {
                 return 0;
             }
@@ -76,12 +76,12 @@ namespace Activation {
             const double OVERFLOW_MAX = 9;
             const double UNDERFLOW_MIN = -9;
             std::clamp(x, UNDERFLOW_MIN, OVERFLOW_MAX);
-            return double(1) / (double(1) + std::exp(double(-1) * x));
+            return 1.0 / (1.0 + std::exp(-1.0 * x));
         },
         
         //sigmoid derivative
         [](double x) -> double {
-            return x * (double(1) - x);
+            return x * (1.0 - x);
         }
     );
 }
