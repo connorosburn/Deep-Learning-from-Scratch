@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <vector>
+#include <random>
 
 struct NeuronInterface {
     NeuronInterface(std::function<void(double)> errorAcc, const double& out):
@@ -19,6 +20,7 @@ struct InputInterface {
 
 struct Weight {
     Weight(NeuronInterface interface);
+    static std::random_device rd;
     static double generateRandom();
     double value;
     NeuronInterface backInterface;

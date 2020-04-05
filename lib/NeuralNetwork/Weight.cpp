@@ -15,8 +15,9 @@ Weight::Weight(NeuronInterface interface): backInterface(interface) {
     value = generateRandom();
 }
 
+std::random_device Weight::rd{};
+
 double Weight::generateRandom() {
-    std::random_device rd{};
     std::mt19937 gen{rd()};
     std::normal_distribution<double> d{0,1};
     return d(gen);
