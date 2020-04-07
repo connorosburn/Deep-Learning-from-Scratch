@@ -12,8 +12,8 @@ struct DataPair {
 
 class MNISTLoader {
     public:
-        std::vector<DataPair> trainingData();
-        std::vector<DataPair> testData();
+        const std::vector<DataPair>& trainingData();
+        const std::vector<DataPair>& testData();
 
     private:
         std::vector<DataPair> loadData(std::string imageFileName, std::string labelFileName);

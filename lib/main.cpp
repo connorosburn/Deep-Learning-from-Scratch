@@ -48,11 +48,11 @@ void smallReadout(const std::string& cycleName, const int& exampleNumber, const 
         std::cout<<"]\n";
     }
 }
-void readout(const std::string& setName, std::vector<NeuronInterface>& networkInterface, const std::vector<double>& expectation, const std::vector<DataPair>& data, const int dataIndex) {
+void readout(const std::string& setName, std::vector<NeuronInterface>& networkInterface, const std::vector<double>& expectation, const std::vector<DataPair>& data, const int dataIndex, const int exampleCount) {
     if(VERBOSE_READOUT) {
-        verboseReadout(setName, data[dataIndex].label, networkInterface, expectation, percentThrough(dataIndex, data.size()));
+        verboseReadout(setName, data[dataIndex].label, networkInterface, expectation, percentThrough(dataIndex, exampleCount));
     } else {
-        smallReadout(setName, dataIndex, data.size());
+        smallReadout(setName, dataIndex, exampleCount);
     }
 }
 
@@ -75,27 +75,42 @@ void backwardPass(std::vector<NeuronInterface>& networkInterface, const std::vec
     }
 }
 
-void predictDataset(std::string setName, std::vector<DataPair> data, bool training) {
+void predictDataset(std::string setName, const std::vector<DataPair>& data, bool training) {
+    int iterations;
+    if(training) {
+        iterations = TRAINING_EXAMPLES;
+    } else {
+        iterations = data.size();
+    }
     auto networkInterface = LAYERS.back() -> getInterfaces();
     int numberCorrect = 0;
-    for(int i = 0; i < data.size(); i++) {
-        INPUT.assign(data[i].image.begin(), data[i].image.end());
-        if(predictExample(networkInterface, data[i].label)) {
+    for(int i = 0; i < iterations; i++) {
+        int index;
+        if(!training) {
+            index = i;
+        } else {
+            std::mt19937 gen{Weight::rd()};
+            std::uniform_int_distribution<std::mt19937::result_type> dist(0, data.size() - 1);
+            index = dist(gen);
+        }
+        std::vector<double> expectation;
+        INPUT.assign(data[index].image.begin(), data[index].image.end());
+        if(predictExample(networkInterface, data[index].label)) {
             numberCorrect++;
         }
-        std::vector<double> expectation = labelVector(data[i].label);
-        readout(setName, networkInterface, expectation, data, i);
+        expectation = labelVector(data[index].label);
         if(training) {
             backwardPass(networkInterface, expectation);
         }
+        readout(setName, networkInterface, expectation, data, i, iterations);
     }
-    std::cout<<"\nAccuracy: "<<percentThrough(numberCorrect, data.size())<<" percent\n";
+    std::cout<<"\nAccuracy: "<<percentThrough(numberCorrect, iterations)<<" percent correct over " << iterations << " examples\n";
 }
 
 int main() {
     MNISTLoader loader;
-    for(int i = 0; i < EPOCHS; i++) {
-        predictDataset("Epoch " + std::to_string(i + 1), loader.trainingData(), true);
+    for(int i = 0; i < REPEAT_FACTOR; i++) {
+        predictDataset("Training Set " + std::to_string(i + 1), loader.trainingData(), true);
     }
     predictDataset("Test", loader.testData(), false);
 }
