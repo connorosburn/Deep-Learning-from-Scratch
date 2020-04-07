@@ -21,12 +21,17 @@ Layer::Layer(const Activation::Activation& activationPair, bool batchNormalizati
 
 void Layer::initializeNeurons(std::vector<NeuronInterface>  backInterfaces, int size) {
     for(int i = 0; i < size; i++) {
+        //only uses a bias in the neuron if batch normalization is off
         neurons.emplace_back(new Neuron(backInterfaces, !batchNorm));
     }
 }
 
 void Layer::forwardPropogate() {
     if(batchNorm) {
+        /*
+            batch normalization works on the whole layer even for layers that aren't fully connected.
+            since convolutional layers inherit this function, it works for both
+        */
         double mean = 0;
         for(auto& neuron : neurons) {
             mean += neuron->productSum();
@@ -54,12 +59,17 @@ void Layer::forwardPropogate() {
 }
 
 void Layer::backPropogate(const double learningRate) {
-    //I'd be mature if I both avoided naming that variable "layerror" AND making a comment about it.
+    /*
+        error has to be calculated for the whole layer, even on non-fully connected layers
+        to adjust the scale and shift factors appropriately
+    */
     double layerError = 0;
     for(auto& neuron : neurons) {
         layerError += neuron->backPropogate(activation.derivative, learningRate);
     }
     if(batchNorm) {
+        // adjusts the scale and shift factors by the error times their gradient (which is just 1 for shift)
+        // tones down the error by a factor of the number of neurons since it accumulates from all of them
         const double adjustment = layerError * learningRate * std::pow(double(neurons.size()), double(-1));
         scale -= adjustment * scaleGrad;
         shift -= adjustment;
