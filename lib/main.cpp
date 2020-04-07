@@ -77,6 +77,7 @@ void backwardPass(std::vector<NeuronInterface>& networkInterface, const std::vec
 
 void predictDataset(std::string setName, const std::vector<DataPair>& data, bool training) {
     int iterations;
+    // user set number of training examples during training phase, all examples if testing phase
     if(training) {
         iterations = TRAINING_EXAMPLES;
     } else {
@@ -86,6 +87,7 @@ void predictDataset(std::string setName, const std::vector<DataPair>& data, bool
     int numberCorrect = 0;
     for(int i = 0; i < iterations; i++) {
         int index;
+        //do all in order for testing phase, pick n random examples for training phase
         if(!training) {
             index = i;
         } else {
