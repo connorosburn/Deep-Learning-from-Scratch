@@ -16,7 +16,7 @@ const int TRAINING_EXAMPLES = 10000;
     how many times it repeats the number of training examples above, basically allowing you to check
     how you are doing periodically
 */
-const int REPEAT_FACTOR = 30;
+const int REPEAT_FACTOR = 60;
 
 //get ready to have a flooded terminal if you set this to true, shows breakdown for every example
 const bool VERBOSE_READOUT = false;
