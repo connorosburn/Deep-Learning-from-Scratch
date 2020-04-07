@@ -2,14 +2,14 @@
 #include <fstream>
 #include <iostream>
 
-std::vector<DataPair> MNISTLoader::trainingData() {
+const std::vector<DataPair>& MNISTLoader::trainingData() {
     if(training.empty()) {
         training = loadData("lib/MNISTFashion/train-images-idx3-ubyte", "lib/MNISTFashion/train-labels-idx1-ubyte");
     }
     return training;
 }
 
-std::vector<DataPair> MNISTLoader::testData() {
+const std::vector<DataPair>& MNISTLoader::testData() {
     if(test.empty()) {
         test = loadData("lib/MNISTFashion/t10k-images-idx3-ubyte", "lib/MNISTFashion/t10k-labels-idx1-ubyte");
     }
